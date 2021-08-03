@@ -1,6 +1,6 @@
 
-
 #Andrew Shen
+
 #January  2021
 
 #Performs ART simulation including the characteristic stutter error to STRs
@@ -18,25 +18,68 @@
 
 import sys
 import os
+from os import path
 import shutil
 import argparse
 from pyfaidx import Fasta
 
 #Argparse
 parser = argparse.ArgumentParser(description='Performs ART simulation including the characteristic stutter error to STRs')
-parser.add_argument("--u", help="Probability of adding additional copy of repeat", type=str, default=0.05)
-parser.add_argument("--d", help="Probability of deleting copy of repeat", type=str, default=0.05)
-parser.add_argument("--rho", help="Size of stutter-induced changes", type=str, default=0.9)
-parser.add_argument("--p_thresh", help="Cutoff percentage for meaningful values", type=str, default=0.01)
-parser.add_argument("--coverage", help="Size of coverage", type=str, default=1000)
-parser.add_argument("--read_length", help="Length of each read", type=str, default=100)
-parser.add_argument("--insert", help="(insert)", type=str, default=350)
-parser.add_argument("--sd", help="Value of standard deviation", type=str, default=50)
-parser.add_argument("--window", help="Size of window around sequence", type=str, default=1000)
+parser.add_argument("--u", help="Probability of adding additional copy of repeat", type=float, default=0.05)
+parser.add_argument("--d", help="Probability of deleting copy of repeat", type=float, default=0.05)
+parser.add_argument("--rho", help="Size of stutter-induced changes", type=float, default=0.9)
+parser.add_argument("--p_thresh", help="Cutoff percentage for meaningful values", type=float, default=0.01)
+parser.add_argument("--coverage", help="Size of coverage", type=int, default=1000)
+parser.add_argument("--read_length", help="Length of each read", type=int, default=100)
+parser.add_argument("--insert", help="(insert)", type=int, default=350)
+parser.add_argument("--sd", help="Value of standard deviation", type=int, default=50)
+parser.add_argument("--window", help="Size of window around sequence", type=int, default=1000)
 parser.add_argument("--coords", help="Path to file containing coordinates for desired sequence", type=str, required=True)
 parser.add_argument("--ref", help="Path to reference genome", type=str, required=True)
+parser.add_argument("--art", help="Path to ART simulator package", type=str, required=True)
 parser.add_argument("--output_dir", help="Name of output directory", type=str, default="test_dir")
 args = parser.parse_args()
+
+validArguments = True
+if(args.u < 0 or args.u > 1):
+    validArguments = False
+    print "INVALID ARGUMENT: Please input a valid value between and 1 for --u."
+if(args.d < 0 or args.d > 1):
+    validArguments = False
+    print "INVALID ARGUMENT: Please input a valid value between and 1 for --d."
+if(args.rho < 0 or args.rho > 1):
+    validArguments = False
+    print "INVALID ARGUMENT: Please input a valid value between and 1 for --rho."
+if(args.p_thresh < 0 or args.p_thresh > 1):
+    validArguments = False
+    print "INVALID ARGUMENT: Please input a valid value between and 1 for --p_thresh."
+if(args.coverage < 0):
+    validArguments = False
+    print "INVALID ARGUMENT: Please input a valid value above 0 for --coverage."
+if(args.read_length < 0):
+    validArguments = False
+    print "INVALID ARGUMENT: Please input a valid value above 0 for --read_length."
+if(args.insert < 0):
+    validArguments = False
+    print "INVALID ARGUMENT: Please input a valid value above 0 for --insert."
+if(args.sd < 0):
+    validArguments = False
+    print "INVALID ARGUMENT: Please input a valid value above 0 for --sd."
+if(args.window < 0):
+    validArguments = False
+    print "INVALID ARGUMENT: Please input a valid value above 0 for --window."
+if(path.exists(args.coords) == False):
+    validArguments = False
+    print "INVALID ARGUMENT: Please input a valid path for --coords."
+if(path.exists(args.ref) == False):
+    validArguments = False
+    print "INVALID ARGUMENT: Please input a valid path for --ref."
+if(path.exists(args.art) == False):
+    validArguments = False
+    print "INVALID ARGUMENT: Please input a valid path for --art."
+
+if(validArguments != True):
+   exit()
 
 #Creates foldering structure
 current = os.getcwd()
@@ -80,6 +123,10 @@ with open(ref_coords,'r') as file:
     ref_coords_read = file.read()
     ref_coords_split = ref_coords_read.split()
 
+if(ref_coords_split[0][:3] != "chr"):
+    print 'INVALID ARGUMENT: Please input a path to a --coords file in the format "chrom start end length repeat" with chrom in form "chr#".'
+    exit()
+
 chrom = ref_coords_split[0]
 start = int(ref_coords_split[1])
 end = int(ref_coords_split[2])
@@ -99,37 +146,88 @@ postflank = ref_pyfaidx[chrom][end:end+window]
 #print postflank
 
 #Calculate HipSTR error model for values 
-delta = [-3,-2,-1,0,1,2,3] #can be 0, >0, <0
+#delta = [-3,-2,-1,0,1,2,3] #can be 0, >0, <0
+
+#values_dict = {}
+#u = args.u
+#d = args.d
+#rho = args.rho
+
+#for delt in delta:
+#    if(delt == 0):
+#	values_dict[delt] = 1-u-d
+#    elif(delt > 0):
+#	values_dict[delt] = (u*rho*(1-rho)**(delt-1))
+#    elif(delt < 0):
+#	values_dict[delt] = d*rho*(1-rho)**(-delt-1)
+
+
+
+#More flexible version of HipSTR error model
+lowDelta = 0
+highDelta = 0
 
 values_dict = {}
-u = float(args.u)
-d = float(args.d)
-rho = float(args.rho)
+u = args.u
+d = args.d
+rho = args.rho
+p_thresh = args.p_thresh
 
-for delt in delta:
+inRange = True
+currDelta = 0
+while(inRange):
+    calculatedValue = 0
+    if(currDelta == 0):
+        calculatedValue = 1-u-d
+    elif(currDelta > 0):
+        calculatedValue = (u*rho*(1-rho)**(currDelta-1))
+    elif(currDelta < 0):
+        calculatedValue = d*rho*(1-rho)**(-currDelta-1)    
+    if(calculatedValue > p_thresh):
+	currDelta = currDelta - 1
+    else:
+	inRange = False
+lowDelta = currDelta
+
+inRange = True
+currDelta = 0
+while(inRange):
+    calculatedValue = 0
+    if(currDelta == 0):
+        calculatedValue = 1-u-d
+    elif(currDelta > 0):
+        calculatedValue = (u*rho*(1-rho)**(currDelta-1))
+    elif(currDelta < 0):
+        calculatedValue = d*rho*(1-rho)**(-currDelta-1)
+    if(calculatedValue > p_thresh):
+        currDelta = currDelta + 1
+    else:
+        inRange = False
+highDelta = currDelta
+
+for delt in range(lowDelta+1, highDelta, 1):
     if(delt == 0):
-	values_dict[delt] = 1-u-d
+       values_dict[delt] = 1-u-d
     elif(delt > 0):
-	values_dict[delt] = (u*rho*(1-rho)**(delt-1))
+       values_dict[delt] = (u*rho*(1-rho)**(delt-1))
     elif(delt < 0):
-	values_dict[delt] = d*rho*(1-rho)**(-delt-1)
-
-
+       values_dict[delt] = d*rho*(1-rho)**(-delt-1)
 
 #Only keep percentages greater than p_thresh
-p_thresh = float(args.p_thresh)
 values_edit = {k:v for (k,v) in values_dict.items() if v > p_thresh}
-#for k,v in values_edit.iteritems():
-#	print k,v
+for k,v in values_edit.iteritems():
+	print k,v
 
 #print values_edit
 #Create fasta files for all sequences with 
+art_path = args.art
 for k,v in values_edit.iteritems():
     stutter = k
     #FASTA header: >chr4:3073877-3075933
     header = ">" + str(chrom) + ":" + str(start) + "-" + str(end) + "_" + str(k)
     #print header
     current_repeat = str(repeat)
+    #print repeat
     new_fa = ""
     new_fa = new_fa + header + "\n" + str(preflank)
     if k == 0:
@@ -143,6 +241,7 @@ for k,v in values_edit.iteritems():
 	repeat_length = len(repeat_seq)
 	subtract_size = k*repeat_length
 	current_repeat = current_repeat[:subtract_size]
+	new_fa += current_repeat
     new_fa += str(postflank)
     file_name = "output" + str(stutter) + ".fa"
     save_path = new_path + "/fasta"
@@ -155,8 +254,8 @@ for k,v in values_edit.iteritems():
 
 #Run ART based on percentages
     #value = int(v*int(args.coverage))
-    value = v*int(args.coverage)
-    print value
+    value = v*args.coverage
+    #print value
     #number of times to run ART
     #ART parameters: ref (fa file), read_length (100), coverage (value based on percentages), insert (350), sd (50), output (fq file name)
     #for val in range(value):
@@ -171,7 +270,7 @@ for k,v in values_edit.iteritems():
     output = dir_name + "_dir/" + name
     #print name
     #print output
-    cmd='/storage/ashen/NGS_simulator/art_illumina -sam -i '+ref+' -p -l '+str(read_length)+' -f '+str(coverage)+' -m '+str(insert)+' -s '+str(sd)+' -o '+output
+    cmd= art_path +' -sam -i '+ref+' -p -l '+str(read_length)+' -f '+str(coverage)+' -m '+str(insert)+' -s '+str(sd)+' -o '+output + " > /dev/null"
     os.system(cmd)
     #break
     #break
@@ -193,13 +292,15 @@ for subdir, dirs, files in os.walk(new_path + "/fastq"):
 	with open(current_path2) as file:
             content2 = file.read()
 	master_fq_2 += content2 + "\n"
-f = open("/storage/ashen/NGS_simulator/test_dir/combined1.fq", "w")
+cwd = os.getcwd()
+f = open(cwd + "/test_dir/combined1.fq", "w")
 f.write(master_fq_1)
 f.close()
-f2 = open("/storage/ashen/NGS_simulator/test_dir/combined2.fq", "w")
+f2 = open(cwd + "/test_dir/combined2.fq", "w")
 f2.write(master_fq_2)
 f2.close()
 
-   
+
+print "simTool.py ran successfully."  
 
 
