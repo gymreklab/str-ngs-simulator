@@ -84,8 +84,9 @@ if(validArguments != True):
 #Creates foldering structure
 current = os.getcwd()
 new_path = current + "/" + args.output_dir
-
-shutil.rmtree(new_path)
+#If path to output directory exists, deletes directory, then creates a new directory
+if(os.path.isdir(new_path)): shutil.rmtree(new_path)
+#Creates the output directory and the fasta and fastq sub-directories
 os.mkdir(new_path)
 os.mkdir(new_path + "/fasta")
 os.mkdir(new_path + "/fastq")
@@ -215,8 +216,8 @@ for delt in range(lowDelta+1, highDelta, 1):
 
 #Only keep percentages greater than p_thresh
 values_edit = {k:v for (k,v) in values_dict.items() if v > p_thresh}
-for k,v in values_edit.iteritems():
-	print k,v
+#for k,v in values_edit.iteritems():
+#    print k,v
 
 #print values_edit
 #Create fasta files for all sequences with 
@@ -253,8 +254,8 @@ for k,v in values_edit.iteritems():
     f.close()
 
 #Run ART based on percentages
-    #value = int(v*int(args.coverage))
-    value = v*args.coverage
+    value = int(v*int(args.coverage))
+    #value = v*int(args.coverage)
     #print value
     #number of times to run ART
     #ART parameters: ref (fa file), read_length (100), coverage (value based on percentages), insert (350), sd (50), output (fq file name)
@@ -293,10 +294,10 @@ for subdir, dirs, files in os.walk(new_path + "/fastq"):
             content2 = file.read()
 	master_fq_2 += content2 + "\n"
 cwd = os.getcwd()
-f = open(cwd + "/test_dir/combined1.fq", "w")
+f = open(new_path + "/combined1.fq", "w")
 f.write(master_fq_1)
 f.close()
-f2 = open(cwd + "/test_dir/combined2.fq", "w")
+f2 = open(new_path+ "/combined2.fq", "w")
 f2.write(master_fq_2)
 f2.close()
 

@@ -8,9 +8,10 @@ rho=$3
 coverage=$4
 ref="/storage/resources/dbase/human/GRCh38/GRCh38_full_analysis_set_plus_decoy_hla.fa"
 coords="ref_HTT.bed"
+art="/storage/ashen/NGS_simulator/art_illumina"
 
 #Runs simTool.py using the chosen parameters
-python /storage/ashen/NGS_simulator/str-ngs-simulator/simTool.py --u $u --d $d --rho $rho --coverage $coverage --coords $coords --ref $ref >/dev/null
+python /storage/ashen/NGS_simulator/str-ngs-simulator/simTool.py --u $u --d $d --rho $rho --coverage $coverage --coords $coords --ref $ref --art $art >/dev/null
 
 echo "INPUTS"
 echo "u = " $u
