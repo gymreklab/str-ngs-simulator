@@ -15,6 +15,7 @@
 	#sys.argv[8]: ref_genome being path to the reference genome file
 #output_dir contains three items: fasta fastq combined.fq 
 
+#!/usr/bin/env python
 
 import sys
 import os
