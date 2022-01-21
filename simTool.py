@@ -23,6 +23,8 @@ import shutil
 import argparse
 from pyfaidx import Fasta
 
+#!/usr/bin/env python
+
 #Argparse
 parser = argparse.ArgumentParser(description='Performs ART simulation including the characteristic stutter error to STRs')
 parser.add_argument("--u", help="Probability of adding additional copy of repeat", type=float, default=0.05)
