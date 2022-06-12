@@ -1,7 +1,7 @@
 
 package:
-    name: simulationTool
-    version: {{v1.0.0}}
+    name: stuttersim
+    version: v1.0.0
 
 source: 
     url: https://github.com/andrew7shen/str-ngs-simulator/archive/v1.0.0.tar.gz
@@ -11,14 +11,14 @@ build:
     number: 0
     script: "{{PYTHON}} -m pip install . --no-deps --ignore-installed --no-cache-dir -vvv"
     entry_points:
-        - simulationTool = simulationTool.__main__:main
+        - stuttersim = stuttersim.__main__:main
     noarch: python
 
 requirements:
     host:
-        - pip >= 19.0.3
+        - pip >=19.0.3
         - python
     run:
-        - python >= 3.5
-        - pyfaidx >= 0.6.4
-        - ART >= 2016.06.05
+        - python >=3.5
+        - pyfaidx >=0.5.3
+        - ART >=2016.06.05
