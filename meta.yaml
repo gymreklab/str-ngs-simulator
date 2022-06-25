@@ -4,8 +4,8 @@ package:
     version: v1.0.0
 
 source: 
-    url: https://github.com/andrew7shen/str-ngs-simulator/archive/v1.0.0.tar.gz
-    sha256: sha256_string
+    url: https://github.com/gymreklab/str-ngs-simulator/archive/v1.0.0.tar.gz
+    sha256: 4b74e1829b5830ae23ef33373828a5687afc5ff37eb0ac545acd06572546fd0b
 
 build:
     number: 0
@@ -18,7 +18,17 @@ requirements:
     host:
         - pip >=19.0.3
         - python
+        - poetry >=1.1.13
     run:
         - python >=3.5
         - pyfaidx >=0.5.3
         - ART >=2016.06.05
+
+#test:
+#  source_files:
+#    - tests/
+#  requires:
+#    - pytest >=6.2.5
+#    - pytest-cov >=3.0.0
+#  commands:
+#    - 
