@@ -24,11 +24,11 @@ requirements:
         - pyfaidx >=0.5.3
         - ART >=2016.06.05
 
-#test:
-#  source_files:
-#    - tests/
-#  requires:
-#    - pytest >=6.2.5
-#    - pytest-cov >=3.0.0
-#  commands:
-#    - 
+test:
+    source_files:
+        - tests/
+    requires:
+        - pytest >=6.2.5
+        - pytest-cov >=3.0.0
+    commands:
+        - bash str-ngs-simulator/tests/input_checker.sh
