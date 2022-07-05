@@ -18,7 +18,7 @@ With conda
 Currently str-ngs-simulator is...
 
 ## Contact Us
-If you have any questions about usage or issues with the tool, please reach out to aashen@ucsd.edu.
+If you have any questions about usage or issues with the tool, please reach create a Github issue or ask a qustion in the Discussion section.
 
 ## Contributing
 
