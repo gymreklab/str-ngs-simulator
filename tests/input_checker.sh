@@ -11,7 +11,8 @@ coords="ref_HTT.bed"
 art="/storage/ashen/NGS_simulator/art_illumina"
 
 #Runs simTool.py using the chosen parameters
-python /storage/ashen/NGS_simulator/str-ngs-simulator/simTool.py --u $u --d $d --rho $rho --coverage $coverage --coords $coords --ref $ref --art $art >/dev/null
+#python /storage/ashen/NGS_simulator/str-ngs-simulator/simTool.py --u $u --d $d --rho $rho --coverage $coverage --coords $coords --ref $ref --art $art >/dev/null
+stuttersim --u $u --d $d --rho $rho --coverage $coverage --coords $coords --ref $ref --art $art >/dev/null
 
 echo "INPUTS"
 echo "u = " $u

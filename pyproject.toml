@@ -4,6 +4,9 @@ version = "0.1.0"
 description = ""
 authors = ["Andrew Shen"]
 license = "MIT"
+packages = [
+    { include = "simulationTool" }
+]
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -11,7 +14,7 @@ python = "^3.10"
 [tool.poetry.dev-dependencies]
 
 [tool.poetry.scripts]
-simulationTool = 'simulationTool.__main__:main'
+stuttersim = 'simulationTool.__main__:main'
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

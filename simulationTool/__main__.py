@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 
 #Andrew Shen
 
@@ -16,8 +17,6 @@
 #output_dir contains three items: fasta fastq combined.fq 
 
 def main():
-
-    #!/usr/bin/env python
 
     import sys
     import os
