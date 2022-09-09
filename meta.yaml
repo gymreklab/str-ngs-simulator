@@ -31,4 +31,5 @@ test:
         - pytest >=6.2.5
         - pytest-cov >=3.0.0
     commands:
-        - bash str-ngs-simulator/tests/input_checker.sh
+        - exit 1
+        #- bash str-ngs-simulator/tests/input_checker.sh
