@@ -4,8 +4,9 @@ package:
     version: v1.0.0
 
 source: 
-    url: https://github.com/gymreklab/str-ngs-simulator/archive/v1.0.0.tar.gz
-    sha256: 4b74e1829b5830ae23ef33373828a5687afc5ff37eb0ac545acd06572546fd0b
+    #url: https://github.com/gymreklab/str-ngs-simulator/archive/v1.0.0.tar.gz
+    path: '..'
+    #sha256: 4b74e1829b5830ae23ef33373828a5687afc5ff37eb0ac545acd06572546fd0b
 
 build:
     number: 0
