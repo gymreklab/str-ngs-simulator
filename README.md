@@ -16,6 +16,7 @@ With conda
 
 ## Development Notes
 Currently str-ngs-simulator is...
+BUILD TEST #1 (11/21)
 
 ## Contact Us
 If you have any questions about usage or issues with the tool, please reach create a Github issue or ask a qustion in the Discussion section.
