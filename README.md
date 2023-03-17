@@ -11,8 +11,28 @@ With conda
 
 ## Usage
 
+Steps to run tool
 ```(insert usage)
+1. Download external packages "pyfaidx" and "art"
+2. Run __main__.py file with parameters "--coords", "--ref", "--art"
+3. Confirm that output "test_dir" was created with output files
 ```
+
+Example run
+```
+General format:
+python __main__.py --coords <path to coordinate file> --ref <path to reference genome> --art <path to art package>
+
+With local parameters:
+python __main__.py --coords ref_HTT.bed --ref /storage/resources/dbase/human/hg19/hg19.fa --art /storage/ashen/NGS_simulator/art_illumina --output_dir test_set_out
+```
+
+Please reference directory "example_files" for example input and output files
+1. ref_HTT.bed: example coordinates file
+2. test_set_out: example output directory
+3. Use hg19.fa reference genome 
+
+
 
 ## Development Notes
 Currently str-ngs-simulator is...
