@@ -17,6 +17,8 @@ Steps to run tool
 2. Run __main__.py file with parameters "--coords", "--ref", "--art"
 3. Confirm that output "test_dir" was created with output files
 ```
+ART Download:
+https://www.niehs.nih.gov/research/resources/software/biostatistics/art/index.cfm
 
 Example run
 ```
