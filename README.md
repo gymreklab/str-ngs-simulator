@@ -29,6 +29,14 @@ With local parameters:
 python __main__.py --coords ref_HTT.bed --ref /storage/resources/dbase/human/hg19/hg19.fa --art /storage/ashen/NGS_simulator/art_illumina --output_dir test_set_out
 ```
 
+Output format
+- The output directory contains a few different files and folders:
+- "combined1.fq": combined final simulated reads in forward orientation
+- "combined2.fq": combined final simulated reads in reverse orientation
+- "fasta": directory containing the reference sequence files used as templates for simulated data
+- "fastq": directory containing the individual simulated reads for each group of stutter errors 
+
+
 Please reference directory "example_files" for example input and output files
 1. ref_HTT.bed: example coordinates file
 2. test_set_out: example output directory
