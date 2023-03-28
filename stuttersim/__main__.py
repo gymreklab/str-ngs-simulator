@@ -187,7 +187,7 @@ def main():
             subtract_size = k*repeat_length
             current_repeat = current_repeat[:subtract_size]
             new_fa += current_repeat
-            new_fa += str(postflank)
+        new_fa += str(postflank)
         file_name = "output" + str(stutter) + ".fa"
         save_path = new_path + "/fasta"
         completeName = os.path.join(save_path, file_name)
